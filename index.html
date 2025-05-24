@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>For My Antara 🌹</title>
+  <style>
+    /* ===== Blooming Flower ===== */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Arial', sans-serif;
+      background: #1a1a2e;
+      color: #fff;
+      overflow-x: hidden;
+    }
+
+    #flower-container {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      z-index: 100;
+    }
+
+    .stem {
+      width: 8px;
+      height: 0;
+      background: linear-gradient(to top, #2d5a27, #4CAF50);
+      position: absolute;
+      bottom: 0;
+      animation: growStem 3s forwards;
+    }
+
+    .rose {
+      width: 0;
+      height: 0;
+      position: absolute;
+      bottom: 0;
+      opacity: 0;
+      animation: bloomRose 3s 2.5s forwards;
+    }
+
+    .petal {
+      position: absolute;
+      width: 30px;
+      height: 40px;
+      background: linear-gradient(to bottom, #ff4d6d, #c9184a);
+      border-radius: 50% 50% 0 50%;
+      transform-origin: bottom right;
+    }
+
+    @keyframes growStem {
+      to { height: 50vh; }
+    }
+
+    @keyframes bloomRose {
+      to { 
+        width: 150px;
+        height: 150px;
+        bottom: 50vh;
+        opacity: 1;
+      }
+    }
+
+    /* ===== Memory Game ===== */
+    #game {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      background: rgba(26, 26, 46, 0.9);
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 90;
+    }
+
+    #game-board {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 10px;
+      max-width: 90%;
+    }
+
+    .block {
+      width: 50px;
+      height: 50px;
+      background: #ffb6c1;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .block.flipped {
+      background: #ff69b4;
+      transform: rotateY(180deg);
+    }
+
+    /* ===== Message Section ===== */
+    #message {
+      display: none;
+      padding: 40px 20px;
+      max-width: 800px;
+      margin: 0 auto;
+      min-height: 100vh;
+      background: #fff5f7;
+      color: #5a2a38;
+    }
+
+    #message h1 {
+      color: #c9184a;
+      font-size: 36px;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .heart {
+      font-size: 60px;
+      text-align: center;
+      display: block;
+      margin: 20px auto;
+      animation: beat 1s infinite;
+      cursor: pointer;
+      color: #ff4d6d;
+    }
+
+    #message p {
+      font-size: 18px;
+      line-height: 1.8;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    @keyframes beat {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+
+    /* ===== Time Counter ===== */
+    .time-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+      margin: 40px auto;
+      max-width: 500px;
+    }
+
+    .time-block {
+      background: white;
+      border-radius: 10px;
+      padding: 25px 15px;
+      box-shadow: 0 3px 10px rgba(210, 51, 105, 0.08);
+    }
+
+    .number {
+      font-size: 42px;
+      font-weight: 300;
+      color: #d23369;
+      margin-bottom: 5px;
+      line-height: 1;
+    }
+
+    .label {
+      font-size: 14px;
+      color: #9e6a7c;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    /* ===== Story Section ===== */
+    .story-section {
+      text-align: left;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    .moment {
+      margin-bottom: 25px;
+      padding-left: 20px;
+      border-left: 2px solid #ffb3c6;
+    }
+
+    .moment-date {
+      font-weight: 500;
+      color: #d23369;
+      font-size: 15px;
+      margin-bottom: 5px;
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      #game-board {
+        grid-template-columns: repeat(4, 1fr);
+      }
+      .block {
+        width: 40px;
+        height: 40px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 1. Blooming Rose -->
+  <div id="flower-container">
+    <div class="stem"></div>
+    <div class="rose" id="rose"></div>
+  </div>
+
+  <!-- 2. Memory Game -->
+  <div id="game">
+    <h2 style="color: #ffb6c1; text-align: center;">Find all matching pairs to continue! 💖</h2>
+    <div id="game-board"></div>
+    <p id="pairs-found" style="color: #fff; text-align: center; margin-top: 20px;">Pairs found: 0/12</p>
+  </div>
+
+  <!-- 3. Your Message + Time Counter -->
+  <div id="message">
+    <h1>My Dearest Antara</h1>
+    <span class="heart" onclick="this.innerHTML = '❤️🥰❤️'; setTimeout(() => { this.innerHTML = '❤️'; }, 1000)">❤️</span>
+    
+    <!-- YOUR EXACT MESSAGE IS HERE -->
+    <p>
+      No matter where life takes us, I want you to know one thing with all your heart:<br><br>
+      I'm always with you. Through every smile, every tear, every storm or calm,<br>
+      I'm right beside you in spirit, holding your hand. I'll never leave you,<br>
+      not in silence, not in distance, not even in the darkest hours.<br><br>
+      You are never alone, and you never will be because my heart has chosen you,<br>
+      and it's not going anywhere. So be sure of this - my presence, my support,<br>
+      it's all yours, forever.
+    </p>
+
+    <!-- Time Counter -->
+    <div class="time-grid">
+      <div class="time-block">
+        <div class="number" id="days-together">0</div>
+        <div class="label">Days</div>
+      </div>
+      
+      <div class="time-block">
+        <div class="number" id="current-month">03</div>
+        <div class="label" id="month-year">March 2025</div>
+      </div>
+      
+      <div class="time-block">
+        <div class="number" id="hours-together">0</div>
+        <div class="label">Hours</div>
+      </div>
+      
+      <div class="time-block">
+        <div class="number" id="minutes-together">0</div>
+        <div class="label">Minutes</div>
+      </div>
+      
+      <div class="time-block">
+        <div class="number" id="seconds-together">0</div>
+        <div class="label">Seconds</div>
+      </div>
+    </div>
+
+    <!-- Story Timeline -->
+    <div class="story-section">
+      <h2>Our Beautiful Story</h2>
+      
+      <div class="moment">
+        <div class="moment-date">2025 03:11</div>
+        <div class="moment-text">The day we met on Instagram at 11:34 AM ❤️</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 1. Create Rose
+    const rose = document.getElementById('rose');
+    for (let i = 0; i < 12; i++) {
+      const petal = document.createElement('div');
+      petal.className = 'petal';
+      petal.style.transform = `rotate(${i * 30}deg)`;
+      rose.appendChild(petal);
+    }
+
+    // 2. Start Game After Flower Blooms
+    setTimeout(() => {
+      document.getElementById('flower-container').style.display = 'none';
+      startGame();
+    }, 6000);
+
+    function startGame() {
+      const game = document.getElementById('game');
+      const gameBoard = document.getElementById('game-board');
+      const pairsFoundElement = document.getElementById('pairs-found');
+      
+      game.style.display = 'flex';
+      
+      const emojis = ['❤️', '🌹', '🎀', '🌸', '💌', '💍', '💐', '🫂', '👩‍❤️‍👨', '💒', '🤗', '🥰'];
+      const cards = [...emojis, ...emojis];
+      cards.sort(() => Math.random() - 0.5);
+      
+      let flippedCards = [];
+      let matchedPairs = 0;
+      let canFlip = true;
+      
+      cards.forEach((emoji, index) => {
+        const block = document.createElement('div');
+        block.className = 'block';
+        block.dataset.emoji = emoji;
+        block.dataset.index = index;
+        
+        block.addEventListener('click', () => {
+          if (!canFlip || block.classList.contains('flipped') || flippedCards.length >= 2) return;
+          
+          block.classList.add('flipped');
+          block.textContent = block.dataset.emoji;
+          flippedCards.push(block);
+          
+          if (flippedCards.length === 2) {
+            canFlip = false;
+            const [card1, card2] = flippedCards;
+            
+            if (card1.dataset.emoji === card2.dataset.emoji) {
+              matchedPairs++;
+              pairsFoundElement.textContent = `Pairs found: ${matchedPairs}/12`;
+              flippedCards = [];
+              canFlip = true;
+              
+              if (matchedPairs === 12) {
+                setTimeout(() => {
+                  game.style.display = 'none';
+                  showMessage();
+                }, 1000);
+              }
+            } else {
+              setTimeout(() => {
+                card1.classList.remove('flipped');
+                card2.classList.remove('flipped');
+                card1.textContent = '';
+                card2.textContent = '';
+                flippedCards = [];
+                canFlip = true;
+              }, 1000);
+            }
+          }
+        });
+        
+        gameBoard.appendChild(block);
+      });
+    }
+
+    // 3. Show Message & Start Timer
+    function showMessage() {
+      document.getElementById('message').style.display = 'block';
+      startTimer();
+    }
+
+    // Time Counter
+    function startTimer() {
+      const startDate = new Date("2025-03-11T11:34:00");
+      const monthNames = ["January", "February", "March", "April", "May", "June",
+                        "July", "August", "September", "October", "November", "December"];
+
+      function updateTime() {
+        const now = new Date();
+        const diff = now - startDate;
+        
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+        
+        document.getElementById('days-together').textContent = days;
+        document.getElementById('hours-together').textContent = hours;
+        document.getElementById('minutes-together').textContent = minutes;
+        document.getElementById('seconds-together').textContent = seconds;
+        
+        const currentMonth = now.getMonth();
+        document.getElementById('current-month').textContent = (currentMonth + 1).toString().padStart(2, '0');
+        document.getElementById('month-year').textContent = `${monthNames[currentMonth]} ${now.getFullYear()}`;
+      }
+      
+      updateTime();
+      setInterval(updateTime, 1000);
+    }
+  </script>
+</body>
+</html>
